@@ -2,16 +2,20 @@ package com.atguigu.crud.controller;
 
 import java.util.List;
 
+import com.atguigu.crud.bean.Msg;
+import net.sf.jsqlparser.expression.MySQLGroupConcat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.atguigu.crud.bean.Employee;
 import com.atguigu.crud.service.EmployeeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 处理员工CRUD请求
@@ -19,11 +23,18 @@ import com.github.pagehelper.PageInfo;
  * @author lfy
  * 
  */
+@ResponseBody
 @Controller
 public class EmployeeController {
 
 	@Autowired
 	EmployeeService employeeService;
+
+	@RequestMapping(value = "/emp",method = RequestMethod.POST)
+	public Msg saveEmp(Employee employee){
+		employeeService.saveEmp(employee);
+		return Msg.succes();
+	}
 
 	/**
 	 * 查询员工数据（分页查询）
@@ -31,7 +42,7 @@ public class EmployeeController {
 	 * @return
 	 */
 	@RequestMapping("/emps")
-	public String getEmps(
+	public Msg getEmps(
 			@RequestParam(value = "pn", defaultValue = "1") Integer pn,
 			Model model) {
 		// 这不是一个分页查询；
@@ -43,9 +54,6 @@ public class EmployeeController {
 		// 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
 		// 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
 		PageInfo page = new PageInfo(emps, 5);
-		model.addAttribute("pageInfo", page);
-
-		return "list";
+		return Msg.succes().addData("pageInfo",page);
 	}
-
 }
