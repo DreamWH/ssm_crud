@@ -7,15 +7,12 @@ import net.sf.jsqlparser.expression.MySQLGroupConcat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.crud.bean.Employee;
 import com.atguigu.crud.service.EmployeeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 处理员工CRUD请求
@@ -29,6 +26,11 @@ public class EmployeeController {
 
 	@Autowired
 	EmployeeService employeeService;
+
+	@RequestMapping(value = "/emp/{empName}",method = RequestMethod.GET)
+	public Msg getEmpByName(@PathVariable("empName") String empName){
+		return Msg.succes().addData("count",employeeService.getEmpByName(empName));
+	}
 
 	@RequestMapping(value = "/emp",method = RequestMethod.POST)
 	public Msg saveEmp(Employee employee){

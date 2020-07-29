@@ -36,13 +36,15 @@
 					<div class="form-group">
 						<label for="empName" class="col-sm-2 control-label">empName</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" name="empName" id="empName" placeholder="empName">
+							<input type="text" class="form-control" name="empName" onblur="moverName(this)" id="empName" placeholder="empName">
+							<span class="help-block"></span>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="email" class="col-sm-2 control-label">email</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" name="email" id="email" placeholder="email">
+							<input type="text" class="form-control" name="email" onblur="moverEmail(this)" id="email" placeholder="email">
+							<span class="help-block"></span>
 						</div>
 					</div>
 					<div class="form-group">
@@ -119,7 +121,9 @@
 	</div>
 </div>
 <script type="text/javascript">
+	//总记录数
 	var totalEmps;
+	//初始加载
 	$(function () {
 		to_page(1);
 	});
@@ -245,14 +249,52 @@
 			}
 		})
 	};
+	//校验公共类
+	function check(element,styleClass,msg) {
+		$(element).parent().removeClass("has-error has-success");
+		$(element).next("span").text("");
+		$(element).parent().addClass(styleClass);
+		$(element).next("span").text(msg);
+	}
+	//校验姓名
+	function moverName() {
+		var empName = $("#empName").val();
+		var nameRegex = /(^[a-zA-Z0-9_-]{6,16}$)|(^[\u2E80-\u9FFF]{2,5})/;
+		if(!nameRegex.test(empName)){
+			check("#empName","has-error","请输出3-6个汉字或者6-16为字符！！！");
+			return;
+		}
+		check("#empName","has-success","");
+		$.ajax({
+			url:"${APP_PATH }/emp/"+empName,
+			type:"GET",
+			success:function (res) {
+				if(res.data.count > 0){
+					alert("此员工已经存在！！");
+				}
+			}
+		})
+	}
+	//校验邮箱
+	function moverEmail() {
+		//对邮箱校验
+		var email = $("#email").val();
+		var emailRegex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;;
+		if(!emailRegex.test(email)){
+			check("#email","has-error","邮箱格式不正确，请重新输入！！！");
+		}else{
+			check("#email","has-success","");
+		}
+	}
+
 	//保存员工按钮
 	$("#save_add_emp").click(function () {
+		//保存之前发送请求查询此员工是否存在
 		$.ajax({
 			url:"${APP_PATH }/emp",
 			type:"POST",
 			data:$("form").serialize(),
 			success:function (res) {
-				console.log(res);
 				$("#empsAddModal").modal('hide')
 				to_page(totalEmps);
 			}

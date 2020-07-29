@@ -26,6 +26,10 @@ public class EmployeeService {
 	}
 
 	public int saveEmp(Employee employee) {
-		return employeeMapper.insertSelective(employee);
+		return employeeMapper.addEmps(employee);
+	}
+
+	public int getEmpByName(String empName) {
+		return employeeMapper.getEmpByName(empName);
 	}
 }

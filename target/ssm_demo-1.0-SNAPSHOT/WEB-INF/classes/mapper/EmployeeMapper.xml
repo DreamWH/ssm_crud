@@ -147,6 +147,14 @@
     values (#{empId,jdbcType=INTEGER}, #{empName,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
       #{email,jdbcType=VARCHAR}, #{dId,jdbcType=INTEGER})
   </insert>
+
+  <insert id="addEmps" parameterType="com.atguigu.crud.bean.Employee">
+    insert into tbl_emp (emp_name,gender,email,d_id) values (#{empName},#{gender},#{email},#{dId})
+  </insert>
+
+  <select id="getEmpByName" parameterType="string" resultType="int">
+    select count(emp_name) from tbl_emp where emp_name = #{empName}
+  </select>
   <insert id="insertSelective" parameterType="com.atguigu.crud.bean.Employee">
     insert into tbl_emp
     <trim prefix="(" suffix=")" suffixOverrides=",">

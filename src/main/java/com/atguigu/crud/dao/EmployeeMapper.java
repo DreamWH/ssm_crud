@@ -16,6 +16,8 @@ public interface EmployeeMapper {
 
     int insertSelective(Employee record);
 
+    int addEmps(Employee employee);
+
     List<Employee> selectByExample(EmployeeExample example);
 
     Employee selectByPrimaryKey(Integer empId);
@@ -31,4 +33,6 @@ public interface EmployeeMapper {
     int updateByPrimaryKeySelective(Employee record);
 
     int updateByPrimaryKey(Employee record);
+
+    int getEmpByName(String empName);
 }
